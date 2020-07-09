@@ -1,51 +1,46 @@
 # Re-branding WSO2 Identity Server UIs
 
-From [WSO2 Identity Server 5.9.0](https://wso2.com/identity-and-access-management/) onwards, a new UI extension has been introduced to easily re-brand  basic user interfaces like the login page, username and password recovery pages, and single sign-on pages.
+From [WSO2 Identity Server 5.9.0](https://wso2.com/identity-and-access-management/) onwards, a new UI extension has been introduced to easily re-brand basic user interfaces like the login page, username and password recovery pages, and single sign-on pages.
 
-
-All these UIs are available in the **`authenticationendpoint`** and **`accountrecoveryendpoint`** web apps that are located in the `<IS_HOME>/repository/deployment/server/webapps` folder. To customize these pages, follow the steps below. 
+All these UIs are available in the **`authenticationendpoint`** and **`accountrecoveryendpoint`** web apps that are located in the `<IS_HOME>/repository/deployment/server/webapps` folder. To customize these pages, follow the steps below.
 
 !!! warning
-    To modify the endpoints, apply the 0003 WUM update for WSO2 Identity Server 5.10.0 using the WSO2 Update Manager
-    (WUM). To deploy a WUM update into production, you need to have a paid subscription. If you do not have a paid
-    subscription, you can use this feature with the next version of WSO2 Identity Server when it is released. For
-    more information on updating WSO2 Identity Server using WUM, see [Updating WSO2 Products](https://is.docs.wso2
-    .com/en/latest/administer/getting-wso2-updates/)
+To modify the endpoints, apply the 0003 WUM update for WSO2 Identity Server 5.10.0 using the WSO2 Update Manager
+(WUM). To deploy a WUM update into production, you need to have a paid subscription. If you do not have a paid
+subscription, you can use this feature with the next version of WSO2 Identity Server when it is released. For
+more information on updating WSO2 Identity Server using WUM, see [Updating WSO2 Products](https://is.docs.wso2
+.com/en/latest/administer/getting-wso2-updates/)
 
 ## Step 1: Create the extensions folder
 
 1. Navigate to the `<IS_HOME>/repository/deployment/server/webapps/authenticationendpoint` folder and create a new folder called **`extensions`**.
 
     !!! info
-        You will be adding the modified JSP files along with the modified CSS files into this new `extensions` folder.
-           
-2. Similarly, navigate to the `<IS_HOME>/repository/deployment/server/webapps/accountrecoveryendpoint` folder and create an `extensions` folder.
+    You will be adding the modified JSP files along with the modified CSS files into this new `extensions` folder.
 
+2. Similarly, navigate to the `<IS_HOME>/repository/deployment/server/webapps/accountrecoveryendpoint` folder and create an `extensions` folder.
 
 ## Step 2: Copy the existing header and footer content
 
-To re-brand the header and footer content of the web applications, first copy them over to the newly created `extensions` folders. 
+To re-brand the header and footer content of the web applications, first copy them over to the newly created `extensions` folders.
 
-1. To copy the header and footer content of the **authenticationendpoint** web application:
+1.  To copy the header and footer content of the **authenticationendpoint** web application:
 
-    1. Navigate to the `<IS_HOME>/repository/deployment/server/webapps/authenticationendpoint/includes` folder.
+    1.  Navigate to the `<IS_HOME>/repository/deployment/server/webapps/authenticationendpoint/includes` folder.
 
-    2. Copy the `header.jsp` and `product-footer.jsp` files into the
-    `<IS_HOME>/repository/deployment/server/webapps/authenticationendpoint/extensions` folder.
-       
-        !!! note
-            The `header.jsp` and `product-footer.jsp` files have the capability to override the corresponding files in
-            the `includes` folder.
-    
+    2.  Copy the `header.jsp` and `product-footer.jsp` files into the
+        `<IS_HOME>/repository/deployment/server/webapps/authenticationendpoint/extensions` folder.
+            !!! note
+                The `header.jsp` and `product-footer.jsp` files have the capability to override the corresponding files in
+                the `includes` folder.
 
-2. Similarly, copy the header and footer content of the **accountrecoveryendpoint** web application.
-
+2) Similarly, copy the header and footer content of the **accountrecoveryendpoint** web application.
 
 ## Step 3: Create styling
 
 Create the basic CSS styles that are required to override the existing UI styling.
 
-```css tab="Example"  
+```css tab="Example"
 <style>
     html, body {
         height: 100%;
@@ -199,51 +194,73 @@ Add the `product-footer.jsp` and `header.jsp` files to the extensions folder as 
 
     2. Add the following includes.
 
-       ```
-       <%@include file=”../localize.jsp” %>
-       <%@include file=”../init-url.jsp” %>
-       ``` 
+        ```
+        <%@include file="../includes/localize.jsp" %>
+        <%@include file="../includes/init-url.jsp" %>
+        ```
 
     3. Replace the contents of the `<style>` tag, with the styles you created in [Step 3](#create-styling) inside
-    the header tag.
+       the header tag.
 
-2.  To edit the footer content of the **authenticationendpoint** web application: 
+2.  To edit the footer content of the **authenticationendpoint** web application:
 
     1. Open the `product-footer.jsp` file in the `<IS_HOME>/repository/deployment/server/webapps/authenticationendpoint/extensions` folder.
 
+    2. Import the `localize.jsp` file by inserting the following line at the top of the page:
+
+    ```jsp
+        <jsp:directive.include file="../includes/localize.jsp" />
+    ```
+
     2. To add the company name, replace the content of `<footer> tag` with the following.
+
     ```html
         <footer class="footer">
             <div class="container-fluid">
                 <p>XYZ Company | &copy;
                     <script>document.write(new Date().getFullYear());</script>
-                    <a href="<%=IdentityManagementEndpointUtil.i18n(recoveryResourceBundle, "business.homepage")%>"
+                    <a href="<%=AuthenticationEndpointUtil.i18n(resourceBundle, "business.homepage")%>"
                        target="_blank">
                        <i class="icon fw fw-wso2"></i>
-                       <%=IdentityManagementEndpointUtil.i18n(recoveryResourceBundle, "Inc")%>
+                       <%=AuthenticationEndpointUtil.i18n(resourceBundle, "Inc")%>
                     </a>
-                    . <%=IdentityManagementEndpointUtil.i18n(recoveryResourceBundle, "All.rights.reserved")%>
+                    . <%=AuthenticationEndpointUtil.i18n(resourceBundle, "All.rights.reserved")%>
                 </p>
             </div>
         </footer>
     ```
-      
-3. Similarly, you can re-brand the **accountrecovery** web application header and footer.
+
+3.  Similarly, you can re-brand the **accountrecovery** web application header and footer.
 
     !!! note
-    
+
         Make sure to add the following include to the top, when editing the `header.jsp` file of the **accountrecovery** web application.
-    
-           ```
-           <%@include file=”../localize.jsp” %>
-           ```
 
-4. Refresh the browser and check out the modified header and footer content. 
+           ```
+           <%@include file="../includes/localize.jsp" %>
+           ```
+        The `<footer>` section of the `product-footer.jsp` file in the **accountrecovery** endpoint should be replaced with the following code snippet:
+            ```jsp
+                <footer class="footer">
+                    <div class="container-fluid">
+                        <p>XYZ Company | &copy;
+                            <script>document.write(new Date().getFullYear());</script>
+                            <a href="<%=IdentityManagementEndpointUtil.i18n(recoveryResourceBundle, "business.homepage")%>"
+                            target="_blank">
+                            <i class="icon fw fw-wso2"></i>
+                            <%=IdentityManagementEndpointUtil.i18n(recoveryResourceBundle, "Inc")%>
+                            </a>
+                            . <%=IdentityManagementEndpointUtil.i18n(recoveryResourceBundle, "All.rights.reserved")%>
+                        </p>
+                    </div>
+                </footer>
+            ```
 
+4.  Refresh the browser and check out the modified header and footer content.
 
 !!! tip
 
-    Restarting the server is NOT required to reflect the changes—browser refresh will display the changes. 
+    Restarting the server is NOT required to reflect the changes—browser refresh will display the changes.
 
     ![image](https://user-images.githubusercontent.com/9637873/69425601-420ece00-0d51-11ea-9ce6-b38b3382ae86.png)
     <span class="figcaption_hack">Customized Login Page</span>
@@ -259,7 +276,5 @@ Add the `product-footer.jsp` and `header.jsp` files to the extensions folder as 
     ![image](https://user-images.githubusercontent.com/9637873/69425805-a6319200-0d51-11ea-860b-9cab9245c3d7.png)
     <span class="figcaption_hack">Customized Self signup page</span>
 
-
 !!! note  
-    One advantage of this approach is that WUM updates will not affect your UI changes and you need not worry about manually adding your changes. 
-    
+ One advantage of this approach is that WUM updates will not affect your UI changes and you need not worry about manually adding your changes.
